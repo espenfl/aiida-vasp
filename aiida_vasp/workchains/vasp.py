@@ -15,6 +15,7 @@ from aiida.orm import Code
 from aiida_vasp.utils.aiida_utils import get_data_class, get_data_node
 from aiida_vasp.utils.workchains import compose_exit_code
 from aiida_vasp.workchains.restart import BaseRestartWorkChain
+from aiida_vasp.utils.parameters import ParametersMassage
 
 
 class VaspWorkChain(BaseRestartWorkChain):
@@ -156,8 +157,10 @@ class VaspWorkChain(BaseRestartWorkChain):
         # Set the kpoints (kpoints)
         self.ctx.inputs.kpoints = self.inputs.kpoints
 
-        # Set the parameters (incar)
-        self.ctx.inputs.parameters = self.inputs.parameters
+        # Perform inputs massage to accommodate generalization in higher lying workchains
+        # and set parameters
+        parameters_massager = ParametersMassage(self, self.inputs.parameters)
+        self.ctx.inputs.parameters = parameters_massager.parameters
 
         # Set settings
         if 'settings' in self.inputs:

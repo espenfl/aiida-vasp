@@ -122,6 +122,9 @@ class VaspCalculation(VaspCalcBase):
         spec.exit_code(352, 'ERROR_CRITICAL_MISSING_FILE', message='a file that is marked by the parser as critical is missing.')
         spec.exit_code(1001, 'ERROR_PARSING_FILE_FAILED', message='parsing a file has failed.')
         spec.exit_code(1002, 'ERROR_NOT_ABLE_TO_PARSE_QUANTITY', message='the parser is not able to parse the requested quantity')
+        spec.exit_code(1003,
+                       'ERROR_INVALID_PARAMETER_DETECTED',
+                       message='the parameter massager found invalid tags in the input parameters.')
 
     def prepare_for_submission(self, tempfolder):
         """Add EIGENVAL, DOSCAR, and all files starting with wannier90 to the list of files to be retrieved."""
