@@ -172,12 +172,22 @@ class RelaxWorkChain(WorkChain):
         spec.output('relax.structure', valid_type=get_data_class('structure'), required=False)
 
     def _init_parameters(self):
-        """Set parameters parameters based on other inputs."""
-        parameters = self.inputs.parameters
-        if not self.perform_relaxation():
+        """Collect input to the workchain in the relax namespace and put that into the parameters."""
+        # First collect input that is under the relax namespace defined on the workchain itself and
+        # put that into parameters.
+        parameters = AttributeDict()
+        parameters.relax = AttributeDict()
+        for key, item in self.inputs.relax.items():
+            # Make sure we do not store AiiDA nodes (hence the use of value)
+            parameters.relax[key] = item.value
+        # Now get the input parameters and update the dictionary. This means,
+        # any supplied parameters in the relax namespace will override what is supplied to the workchain
+        # in the relax namespace.
+        input_parameters = AttributeDict(self.inputs.parameters.get_dict())
+        parameters.update(input_parameters)
+        if not parameters.relax.perform:
             # Make sure we do not expose the relax namespace in the input parameters (
             # basically setting no VASP tags related to relaxation unless user overrides)
-            parameters = self.inputs.parameters.copy()
             del parameters.relax
 
         return parameters
