@@ -77,6 +77,7 @@ class VaspCalcBase(CalcJob):
         Subclasses can extend by calling the super method and if neccessary
         modifying it's output CalcInfo before returning it.
         """
+
         # write input files
         incar = tempfolder.get_abs_path('INCAR')
         structure = tempfolder.get_abs_path('POSCAR')
